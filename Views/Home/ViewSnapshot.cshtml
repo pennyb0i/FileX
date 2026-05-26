@@ -1,7 +1,9 @@
 ﻿@model FileX.Models.Snapshot
+@using FileX.Enums
 
 @{
     ViewData["Title"] = "Snapshot Results";
+    var filesByState = Model.Files.GroupBy(f => f.State).ToDictionary(g => g.Key, g => g.ToList());
 }
 
 <div class="container">
@@ -11,27 +13,47 @@
     <h2>Snapshot Results</h2>
     <p><strong>Root Path:</strong> @Model.RootPath</p>
     <p><strong>Created At:</strong> @Model.CreatedAtUtc</p>
-    
-    <h3>Files</h3>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Relative Path</th>
-                <th>Hash</th>
-                <th>Size (bytes)</th>
-                <th>Last Modified</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var file in Model.Files)
-            {
-                <tr>
-                    <td>@file.RelativePath</td>
-                    <td>@file.Hash</td>
-                    <td>@file.Size</td>
-                    <td>@file.LastModifiedUtc</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+
+    <ul class="nav nav-tabs" id="snapshotTabs" role="tablist">
+        @foreach (var state in Enum.GetValues<FileState>())
+        {
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(state == FileState.New ? "active" : "")" id="@($"{state}-tab")" data-bs-toggle="tab" data-bs-target="#@($"{state}-pane")" type="button" role="tab" aria-controls="@($"{state}-pane")" aria-selected="@(state == FileState.New)">@state</button>
+            </li>
+        }
+    </ul>
+
+    <div class="tab-content" id="snapshotTabsContent">
+        @foreach (var state in Enum.GetValues<FileState>())
+        {
+            <div class="tab-pane fade @(state == FileState.New ? "show active" : "")" id="@($"{state}-pane")" role="tabpanel" aria-labelledby="@($"{state}-tab")">
+                <table class="table table-striped mt-3">
+                    <thead>
+                        <tr>
+                            <th>Relative Path</th>
+                            <th>Version</th>
+                            <th>Hash</th>
+                            <th>Size (bytes)</th>
+                            <th>Last Modified</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (filesByState.ContainsKey(state))
+                        {
+                            @foreach (var file in filesByState[state])
+                            {
+                                <tr>
+                                    <td>@file.RelativePath</td>
+                                    <td>@($"v{file.Version}")</td>
+                                    <td>@file.Hash</td>
+                                    <td>@file.Size</td>
+                                    <td>@file.LastModifiedUtc</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
 </div>

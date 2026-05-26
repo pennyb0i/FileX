@@ -105,8 +105,8 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
-# Chutzpah Test files
-_Chutzpah*
+# Snapshots
+Snapshots/
 
 # Visual C++ cache files
 ipch/

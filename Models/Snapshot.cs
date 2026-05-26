@@ -1,4 +1,6 @@
-﻿namespace FileX.Models;
+﻿using FileX.Enums;
+
+namespace FileX.Models;
 
 public class Snapshot
 {
@@ -13,6 +15,8 @@ public class FileSnapshot
     public string RelativePath { get; set; } = string.Empty;
     public string Hash { get; set; } = string.Empty;
     public long Size { get; set; }
+    public int Version { get; set; } = 1;
+    public FileState State { get; set; } = FileState.New;
     public DateTime LastModifiedUtc { get; set; }
 }
 

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FileX.Services;
 using FileX.Services.Abstractions;
 
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<ISnapshotPersistenceService, SnapshotPersistenceService>();
+builder.Services.AddSingleton(new JsonSerializerOptions { WriteIndented = true });
 
 var app = builder.Build();
 
