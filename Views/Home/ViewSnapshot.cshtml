@@ -1,0 +1,37 @@
+﻿@model FileX.Models.Snapshot
+
+@{
+    ViewData["Title"] = "Snapshot Results";
+}
+
+<div class="container">
+    <div class="mb-3">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Scan another file</a>
+    </div>
+    <h2>Snapshot Results</h2>
+    <p><strong>Root Path:</strong> @Model.RootPath</p>
+    <p><strong>Created At:</strong> @Model.CreatedAtUtc</p>
+    
+    <h3>Files</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Relative Path</th>
+                <th>Hash</th>
+                <th>Size (bytes)</th>
+                <th>Last Modified</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var file in Model.Files)
+            {
+                <tr>
+                    <td>@file.RelativePath</td>
+                    <td>@file.Hash</td>
+                    <td>@file.Size</td>
+                    <td>@file.LastModifiedUtc</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
