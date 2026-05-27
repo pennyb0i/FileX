@@ -14,6 +14,7 @@ public class SnapshotPersistenceService : ISnapshotPersistenceService
         _jsonSerializerOptions = jsonSerializerOptions;
     }
 
+    /// <inheritdoc/>
     public async Task SaveSnapshotAsync(Snapshot snapshot)
     {
         if (!Directory.Exists(SnapshotDirectory))
@@ -28,6 +29,7 @@ public class SnapshotPersistenceService : ISnapshotPersistenceService
         await File.WriteAllTextAsync(filePath, json);
     }
 
+    /// <inheritdoc/>
     public async Task<Snapshot?> GetSnapshotAsync(string rootPath)
     {
         var sanitizedPath = string.Join("_", rootPath.Split(Path.GetInvalidFileNameChars()));

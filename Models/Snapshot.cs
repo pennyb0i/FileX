@@ -6,6 +6,7 @@ public class Snapshot
 {
     public string RootPath { get; set; } = string.Empty;
     public DateTime CreatedAtUtc { get; set; }
+    public DateTime? PreviousSnapshotCreatedAtUtc { get; set; }
     public List<FileSnapshot> Files { get; set; } = [];
     public List<DirectorySnapshot> Directories { get; set; } = [];
 }

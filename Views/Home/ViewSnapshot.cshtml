@@ -2,17 +2,24 @@
 @using FileX.Enums
 
 @{
-    ViewData["Title"] = "Snapshot Results";
+    ViewData["Title"] = "Scan Results";
     var filesByState = Model.Files.GroupBy(f => f.State).ToDictionary(g => g.Key, g => g.ToList());
+    var totalSizeMb = Model.Files.Sum(f => f.Size) / (1024.0 * 1024.0);
 }
 
 <div class="container">
     <div class="mb-3">
-        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Scan another file</a>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Scan another folder</a>
+        <a asp-controller="Home" asp-action="ViewSnapshot" asp-route-rootPath="@Model.RootPath" class="btn btn-primary">Scan this folder again</a>
     </div>
-    <h2>Snapshot Results</h2>
+    <h2>Scan Results</h2>
     <p><strong>Root Path:</strong> @Model.RootPath</p>
-    <p><strong>Created At:</strong> @Model.CreatedAtUtc</p>
+    <p><strong>Created At:</strong> @Model.CreatedAtUtc.ToLocalTime()</p>
+    @if (Model.PreviousSnapshotCreatedAtUtc.HasValue)
+    {
+        <p><strong>Previous Scan Created At:</strong> @Model.PreviousSnapshotCreatedAtUtc.Value.ToLocalTime()</p>
+    }
+    <p><strong>Total Size:</strong> @totalSizeMb.ToString("F2") MB</p>
 
     <ul class="nav nav-tabs" id="snapshotTabs" role="tablist">
         @foreach (var state in Enum.GetValues<FileState>())
@@ -32,7 +39,6 @@
                         <tr>
                             <th>Relative Path</th>
                             <th>Version</th>
-                            <th>Hash</th>
                             <th>Size (bytes)</th>
                             <th>Last Modified</th>
                         </tr>
@@ -45,9 +51,8 @@
                                 <tr>
                                     <td>@file.RelativePath</td>
                                     <td>@($"v{file.Version}")</td>
-                                    <td>@file.Hash</td>
                                     <td>@file.Size</td>
-                                    <td>@file.LastModifiedUtc</td>
+                                    <td>@file.LastModifiedUtc.ToLocalTime()</td>
                                 </tr>
                             }
                         }

@@ -3,10 +3,14 @@
 }
 
 <div class="text-center">
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
     <h1 class="display-4">FileX</h1>
     <p>File version tracker</p>
     <form asp-controller="Home" asp-action="ViewSnapshot" method="get">
         <input type="text" name="rootPath" placeholder="Enter folder path" required class="form-control" />
-        <button type="submit" class="btn btn-primary mt-2">View Snapshot</button>
+        <button type="submit" class="btn btn-primary mt-2">Scan folder</button>
     </form>
 </div>
