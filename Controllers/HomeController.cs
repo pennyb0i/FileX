@@ -41,48 +41,14 @@ public class HomeController : Controller
             var currentSnapshot = await _fileService.GetFiles(rootPath);
             var existingSnapshot = await _snapshotPersistenceService.GetSnapshotAsync(rootPath);
 
-            if (existingSnapshot != null)
-            {
-                currentSnapshot.PreviousSnapshotCreatedAtUtc = existingSnapshot.CreatedAtUtc;
-                foreach (var currentFile in currentSnapshot.Files)
-                {
-                    var existingFile = existingSnapshot.Files.FirstOrDefault(f => f.RelativePath == currentFile.RelativePath);
-                    if (existingFile != null)
-                    {
-                        if (existingFile.Hash != currentFile.Hash)
-                        {
-                            currentFile.Version = existingFile.Version + 1;
-                            currentFile.State = FileState.Modified;
-                        }
-                        else
-                        {
-                            currentFile.Version = existingFile.Version;
-                            currentFile.State = FileState.Unchanged;
-                        }
-                    }
-                    else
-                    {
-                        currentFile.State = FileState.New;
-                    }
-                }
-                
-                var deletedFiles = existingSnapshot.Files
-                    .Where(e => currentSnapshot.Files.All(c => c.RelativePath != e.RelativePath))
-                    .ToList();
-                
-                foreach (var deletedFile in deletedFiles)
-                {
-                    deletedFile.State = FileState.Deleted;
-                    currentSnapshot.Files.Add(deletedFile);
-                }
-            }
+            currentSnapshot.ReconcileWith(existingSnapshot);
 
             var snapshotToSave = new Snapshot
             {
                 RootPath = currentSnapshot.RootPath,
                 CreatedAtUtc = currentSnapshot.CreatedAtUtc,
                 Files = currentSnapshot.Files.Where(f => f.State != FileState.Deleted).ToList(),
-                Directories = currentSnapshot.Directories
+                Directories = currentSnapshot.Directories.Where(d => d.State != FileState.Deleted).ToList()
             };
             
             await _snapshotPersistenceService.SaveSnapshotAsync(snapshotToSave);

@@ -10,6 +10,7 @@ FileX is an ASP.NET Core application designed to track file system changes by ta
     - **Modified**: Files that have changed (based on hash).
     - **Deleted**: Files that no longer exist in the current scan.
 - **Persistence**: Saves snapshots locally for historical tracking.
+- **Directory Tracking**: Monitors subdirectory structures to detect additions and removals.
 
 ## Technical Details
 
@@ -53,6 +54,7 @@ FileX je aplikace ASP.NET Core navržená ke sledování změn v souborovém sys
     - **Upravené**: Soubory, které se změnily (na základě hashe).
     - **Smazané**: Soubory, které již v aktuálním skenu neexistují.
 - **Persistence**: Ukládá snímky lokálně pro historické sledování.
+- **Sledování adresářů**: Monitoruje strukturu podadresářů pro detekci jejich přidání a odstranění.
 
 ## Technické detaily
 
