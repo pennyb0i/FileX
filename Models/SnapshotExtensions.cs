@@ -38,9 +38,9 @@ public static class SnapshotExtensions
         foreach (var currentDir in current.Directories)
         {
             var existingDir = existing.Directories.FirstOrDefault(d => d.RelativePath == currentDir.RelativePath);
-            if (existingDir == null)
+            if (existingDir is not null)
             {
-                currentDir.State = FileState.New;
+                currentDir.State = FileState.Unchanged;
             }
         }
 

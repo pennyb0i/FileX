@@ -24,5 +24,5 @@ public class FileSnapshot
 public class DirectorySnapshot
 {
     public string RelativePath { get; set; } = string.Empty;
-    public FileState State { get; set; } = FileState.Unchanged;
+    public FileState State { get; set; } = FileState.New;
 }
