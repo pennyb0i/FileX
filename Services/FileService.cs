@@ -19,6 +19,15 @@ public class FileService : IFileService
     /// <inheritdoc/>
     public async Task<Snapshot> GetFiles(string rootPath)
     {
+        if (!Directory.Exists(rootPath))
+        {
+            if (File.Exists(rootPath))
+            {
+                throw new InvalidOperationException("The path provided points to a file, not a directory.");
+            }
+            throw new InvalidOperationException("The path provided is invalid or does not exist.");
+        }
+
         var maxFileCount = _settings.MaxFileCount;
         var maxTotalSizeInBytes = _settings.MaxTotalSizeInBytes;
         var now = DateTime.UtcNow;
